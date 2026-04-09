@@ -20,7 +20,7 @@ export const PHOTOS: Photo[] = [
   // Example entries — replace with your own photos:
   {
     id: '1',
-    src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1200&q=80',
+    src: 'photos/1.jpg',
     alt: 'Portrait in shadows',
     category: 'portrait',
     title: 'Shadow Play',
@@ -29,7 +29,7 @@ export const PHOTOS: Photo[] = [
   },
   {
     id: '2',
-    src: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1200&q=80',
+    src: 'photos/2.jpg',
     alt: 'City at night',
     category: 'street',
     title: 'After Midnight',
@@ -38,7 +38,7 @@ export const PHOTOS: Photo[] = [
   },
   {
     id: '3',
-    src: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=1200&q=80',
+    src: 'photos/3.jpg',
     alt: 'Forest mist',
     category: 'nature',
     title: 'Into the Haze',
@@ -47,7 +47,7 @@ export const PHOTOS: Photo[] = [
   },
   {
     id: '4',
-    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',
+    src: 'photos/4.jpg',
     alt: 'Mountain peaks',
     category: 'nature',
     title: 'Ascent',
@@ -56,7 +56,7 @@ export const PHOTOS: Photo[] = [
   },
   {
     id: '5',
-    src: 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=1200&q=80',
+    src: 'photos/5.jpg',
     alt: 'Abstract light',
     category: 'abstract',
     title: 'Frequency',
@@ -65,7 +65,7 @@ export const PHOTOS: Photo[] = [
   },
   {
     id: '6',
-    src: 'https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=1200&q=80',
+    src: 'photos/6.jpg',
     alt: 'Street market',
     category: 'documentary',
     title: 'The Exchange',
@@ -74,7 +74,7 @@ export const PHOTOS: Photo[] = [
   },
   {
     id: '7',
-    src: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=1200&q=80',
+    src: 'photos/7.jpg',
     alt: 'Close portrait',
     category: 'portrait',
     title: 'Gaze',
@@ -83,7 +83,7 @@ export const PHOTOS: Photo[] = [
   },
   {
     id: '8',
-    src: 'https://images.unsplash.com/photo-1520209759809-a9bcb6cb3241?w=1200&q=80',
+    src: 'photos/8.jpg',
     alt: 'Urban architecture',
     category: 'street',
     title: 'Grid',
@@ -92,7 +92,7 @@ export const PHOTOS: Photo[] = [
   },
   {
     id: '9',
-    src: 'https://images.unsplash.com/photo-1532408840957-031d8034aeef?w=1200&q=80',
+    src: 'photos/9.jpg',
     alt: 'Light leak',
     category: 'abstract',
     title: 'Bleed',
