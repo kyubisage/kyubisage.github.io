@@ -1,94 +1,17 @@
-<html>
-    <head>
-        <title>Welcome to hell's first step</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <style>
-            .box 
-                {
-                    width:300px;
-                    height:300px;
-                    background-color:darkslategrey;
-                    position:fixed;
-                    margin-left:-150px; /* half of width */
-                    margin-top:-150px;  /* half of height */
-                    top:50%;
-                    left:50%;
-                    border-bottom: black;
-                    border: solid;
-                }
-                body
-                { 
-                    background: url('index.jpg') no-repeat center center fixed; 
-                    color:white;
-                    background-size: cover;
-                }
-                a
-                {
-                    color:turquoise;
-                }
-                a:visited 
-                {
-                    color:yellow ;
-                }
-
-            </style>
-            <script type="text/javascript">
-                        function validate()
-                    {
-                            if(!vuser()&&vpass())
-                            {
-                                alert("Wrong Input");
-                                return false;
-                            }
-                            else{return true;}
-                    }
-                    function vuser()
-                    {
-                        var user=document.getElementById("user").value;
-                        var patt=/\w+/;
-                        console.log(user.length);
-                    return (patt.test(user)&&user.length<21);
-                    }
-                    function vpass()
-                    {
-                        var pass=document.getElementById("pass").value;
-                        var patt=/\w+/;
-                        console.log(pass.length);
-                    return (patt.test(pass)&&pass.length<21);
-                    }
-            </script>
-            <style>
-                #d1
-                {
-                    position: absolute;
-                    top: 22%;
-                    
-                    width: 100%;
-                }
-            </style>
-    </head>
-    <body>
-        <div class="p-3 " id="d1">
-                
-        <form action="check.php" method="POST" onsubmit="return validate()">
-                <div class="container border rounded">
-                        <h3 class="text-center" style="color:chartreuse"> Login:</h3>
-                <div class="row form-group">
-                
-                    <label class="form-control-label glyphicon glyphicon-envelope  col col-lg-2 offset-lg-4 offset-md-4 offset-sm-2 col-md-4 text-center ">Username :</label><input type="text" id="user" class="form-control col col-lg-2 col-md-4 text-center" name="user"/>
-                </div>
-                <div class="form-group row">
-                        <label class="form-control-label col col-lg-2 offset-lg-4 offset-md-4 offset-sm-2 col-md-4 text-center">Password :</label><input type="password" class="form-control col col-lg-2  col-md-4 text-center" id="pass" name="pass"/>
-                </div>
-                <div class="form-group row">
-                    <input type="reset" class="form-control btn-sm col col-lg-2 offset-lg-4 btn-primary offset-md-4 offset-sm-2 col-md-4 text-center" value="Reset"><input type="submit" class="form-control btn-success col col-lg-2  col-md-4 text-center" value="Submit">
-                </div>
-                <div class="form-group row text-center" ><button onclick="window.loaction.href='register.php'" class="form-group col col-lg-2 offset-5 btn btn-info col-md-12 col-sm-12 ">New User? Register</a></div>
-            </div>
-        </form>
-    </div>
-    
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TJ — Photography</title>
+  <meta name="description" content="TJ — Dark String. Photography portfolio." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Bebas+Neue&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/styles.css" />
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="src/main.ts"></script>
+</body>
 </html>
