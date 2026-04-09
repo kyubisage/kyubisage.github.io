@@ -9,7 +9,6 @@ function initCursor(): void {
   document.body.append(cursor, ring);
 
   let mx = -100, my = -100, rx = -100, ry = -100;
-  let raf = 0;
 
   document.addEventListener('mousemove', (e) => {
     mx = e.clientX;
@@ -23,7 +22,7 @@ function initCursor(): void {
     ry += (my - ry) * 0.12;
     ring.style.left = rx + 'px';
     ring.style.top = ry + 'px';
-    raf = requestAnimationFrame(animateRing);
+    requestAnimationFrame(animateRing);
   }
   animateRing();
 
@@ -62,7 +61,6 @@ function initReveal(): void {
 }
 
 // ─── GALLERY ───────────────────────────────────────────────────────
-let currentFilter: Category = 'all';
 let lightboxIndex = 0;
 let filteredPhotos: Photo[] = [...PHOTOS];
 
@@ -104,7 +102,6 @@ function buildGallery(): void {
 }
 
 function applyFilter(category: Category): void {
-  currentFilter = category;
   filteredPhotos = category === 'all' ? [...PHOTOS] : PHOTOS.filter(p => p.category === category);
 
   document.querySelectorAll('.photo-item').forEach(el => {
