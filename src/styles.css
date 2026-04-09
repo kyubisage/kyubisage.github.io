@@ -939,3 +939,11 @@ footer {
   .hero-title { font-size: clamp(5rem, 30vw, 8rem); }
   .hero-sub-text p { font-size: 0.95rem; }
 }
+
+/* ─── TOUCH / MOBILE CURSOR FIX ─────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  body { cursor: auto; }
+  button { cursor: pointer; }
+  a { cursor: pointer; }
+  #cursor, #cursor-ring { display: none !important; }
+}

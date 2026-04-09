@@ -1798,7 +1798,9 @@ function init(): void {
   buildPoetrySection();
   buildMusicPlayer();
   initLoader();
-  initCursor();
+  if (!('ontouchstart' in window) && window.matchMedia('(hover: hover)').matches) {
+    initCursor();
+  }
 
   requestAnimationFrame(() => {
     initReveal();
