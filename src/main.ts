@@ -1664,7 +1664,18 @@ function buildHTML(): void {
         <li><a href="#about">About</a></li>
         <li><a href="https://instagram.com/the_dark_string" target="_blank" rel="noopener">Instagram</a></li>
       </ul>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </nav>
+    <div class="nav-mobile-menu" id="nav-mobile-menu">
+      <ul>
+        <li><a href="#photography" class="nav-mobile-link">Photography</a></li>
+        <li><a href="#poetry" class="nav-mobile-link">Poetry</a></li>
+        <li><a href="#about" class="nav-mobile-link">About</a></li>
+        <li><a href="https://instagram.com/the_dark_string" target="_blank" rel="noopener" class="nav-mobile-link">Instagram</a></li>
+      </ul>
+    </div>
 
     <!-- HERO -->
     <section id="hero">
@@ -1763,18 +1774,6 @@ function buildHTML(): void {
           @the_dark_string
         </a>
       </div>
-      <div class="about-visual">
-        <div class="about-img-frame">
-          <div class="about-placeholder">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-              <rect x="3" y="3" width="18" height="18" rx="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <polyline points="21,15 16,10 5,21"/>
-            </svg>
-            <span>Add your photo here</span>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- FOOTER -->
@@ -1801,6 +1800,22 @@ function init(): void {
   if (!('ontouchstart' in window) && window.matchMedia('(hover: hover)').matches) {
     initCursor();
   }
+
+  // Mobile nav hamburger
+  const hamburger = document.getElementById('nav-hamburger')!;
+  const mobileMenu = document.getElementById('nav-mobile-menu')!;
+  hamburger.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  document.querySelectorAll('.nav-mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
 
   requestAnimationFrame(() => {
     initReveal();

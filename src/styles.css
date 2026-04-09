@@ -745,10 +745,8 @@ nav::before {
 /* ─── ABOUT ──────────────────────────────────────────────────────── */
 #about {
   padding: 80px 48px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
+  display: block;
+  max-width: 700px;
   border-top: 1px solid var(--border);
 }
 .about-text h2 {
@@ -925,7 +923,7 @@ footer {
   .photo-item:nth-child(6n+4) { grid-column: span 3; }
   .photo-item:nth-child(6n+5) { grid-column: span 3; }
   .photo-item:nth-child(6n+6) { grid-column: span 3; }
-  #about { grid-template-columns: 1fr; padding: 60px 24px; gap: 48px; }
+  #about { padding: 60px 24px; }
   footer { padding: 32px 24px; flex-direction: column; gap: 16px; text-align: center; }
   .lightbox-inner { padding: 64px 48px; }
   .lightbox-nav { display: none; }
@@ -946,4 +944,66 @@ footer {
   button { cursor: pointer; }
   a { cursor: pointer; }
   #cursor, #cursor-ring { display: none !important; }
+}
+
+/* ─── HAMBURGER + MOBILE MENU ────────────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+  pointer-events: all;
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: none;
+}
+.nav-hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--white);
+  transition: transform 0.3s var(--ease-out-expo), opacity 0.2s;
+  transform-origin: center;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.nav-mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--black);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-out-expo);
+}
+.nav-mobile-menu.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.nav-mobile-menu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+.nav-mobile-menu a {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 12vw, 4rem);
+  letter-spacing: 0.1em;
+  color: var(--white-dim);
+  transition: color 0.2s;
+}
+.nav-mobile-menu a:hover, .nav-mobile-menu a:active { color: var(--accent); }
+
+@media (max-width: 900px) {
+  .nav-hamburger { display: flex; }
+  .nav-mobile-menu { display: flex; }
 }

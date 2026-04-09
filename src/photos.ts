@@ -8,95 +8,72 @@ export interface Photo {
   orientation: 'landscape' | 'portrait' | 'square';
 }
 
-export type Category = 'all' | 'portrait' | 'street' | 'nature' | 'abstract' | 'documentary';
+export type Category = 'all' | 'portrait' | 'street' | 'nature' | 'abstract';
 
-export const CATEGORIES: Category[] = ['all', 'portrait', 'street', 'nature', 'abstract', 'documentary'];
+export const CATEGORIES: Category[] = ['all', 'portrait', 'street', 'nature', 'abstract'];
 
-// ─── ADD YOUR PHOTOS HERE ────────────────────────────────────────────────────
-// Place image files in /public/photos/ and reference them like: 'photos/your-image.jpg'
-// Supported orientations: 'landscape' | 'portrait' | 'square'
-// ──────────────────────────────────────────────────────────────────────────────
 export const PHOTOS: Photo[] = [
-  // Example entries — replace with your own photos:
   {
     id: '1',
     src: 'photos/1.jpg',
-    alt: 'Portrait in shadows',
+    alt: 'Portrait',
     category: 'portrait',
-    title: 'Shadow Play',
-    year: 2024,
+    title: 'Still',
+    year: 2025,
     orientation: 'portrait',
   },
   {
     id: '2',
     src: 'photos/2.jpg',
-    alt: 'City at night',
+    alt: 'Street',
     category: 'street',
-    title: 'After Midnight',
-    year: 2024,
+    title: 'The Walk',
+    year: 2025,
     orientation: 'landscape',
   },
   {
     id: '3',
     src: 'photos/3.jpg',
-    alt: 'Forest mist',
+    alt: 'Nature',
     category: 'nature',
-    title: 'Into the Haze',
-    year: 2023,
+    title: 'Open',
+    year: 2025,
     orientation: 'landscape',
   },
   {
     id: '4',
-    src: 'photos/4.jpg',
-    alt: 'Mountain peaks',
+    src: 'photos/4.JPG',
+    alt: 'Landscape',
     category: 'nature',
-    title: 'Ascent',
-    year: 2023,
+    title: 'Wide',
+    year: 2025,
     orientation: 'landscape',
   },
   {
     id: '5',
-    src: 'photos/5.jpg',
-    alt: 'Abstract light',
+    src: 'photos/5.JPG',
+    alt: 'Abstract',
     category: 'abstract',
-    title: 'Frequency',
-    year: 2024,
-    orientation: 'portrait',
+    title: 'Light',
+    year: 2025,
+    orientation: 'landscape',
   },
   {
     id: '6',
     src: 'photos/6.jpg',
-    alt: 'Street market',
-    category: 'documentary',
-    title: 'The Exchange',
-    year: 2023,
-    orientation: 'square',
+    alt: 'Portrait',
+    category: 'portrait',
+    title: 'Gaze',
+    year: 2025,
+    orientation: 'portrait',
   },
   {
     id: '7',
     src: 'photos/7.jpg',
-    alt: 'Close portrait',
+    alt: 'Portrait',
     category: 'portrait',
-    title: 'Gaze',
-    year: 2024,
+    title: 'Presence',
+    year: 2025,
     orientation: 'portrait',
-  },
-  {
-    id: '8',
-    src: 'photos/8.jpg',
-    alt: 'Urban architecture',
-    category: 'street',
-    title: 'Grid',
-    year: 2023,
-    orientation: 'landscape',
-  },
-  {
-    id: '9',
-    src: 'photos/9.jpg',
-    alt: 'Light leak',
-    category: 'abstract',
-    title: 'Bleed',
-    year: 2024,
-    orientation: 'landscape',
   },
 ];
