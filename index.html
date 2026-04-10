@@ -8,10 +8,42 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Bebas+Neue&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="src/styles.css" />
+  <script type="module" crossorigin src="./assets/index-CdmBDvZh.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CfGJUcwM.css">
 </head>
 <body>
   <div id="app"></div>
-  <script type="module" src="src/main.ts"></script>
+  <script>
+    // Inject tank game tile after app renders
+    (function(){
+      function injectTankTile(){
+        const grid = document.querySelector('.games-grid');
+        if(!grid){ setTimeout(injectTankTile,100); return; }
+        if(document.getElementById('tank-tile')) return;
+        const a = document.createElement('a');
+        a.id = 'tank-tile';
+        a.href = './tank.html';
+        a.className = 'game-tile';
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.innerHTML = `<div class="game-tile-bg"></div>
+<div class="game-tile-icon">🎯</div>
+<div class="game-tile-info">
+  <h3 class="game-tile-title">Iron Rogue</h3>
+  <p class="game-tile-desc">A roguelike tank arena. Drive. Aim. Destroy waves of enemies. Choose your upgrades. Survive.</p>
+  <span class="game-tile-tag">Roguelike</span>
+  <span class="game-tile-tag">Tank</span>
+  <span class="game-tile-tag">Action</span>
+</div>
+<div class="game-tile-play">Play ↗</div>`;
+        grid.appendChild(a);
+      }
+      if(document.readyState==='loading'){
+        document.addEventListener('DOMContentLoaded',()=>setTimeout(injectTankTile,200));
+      } else {
+        setTimeout(injectTankTile,200);
+      }
+    })();
+  </script>
 </body>
 </html>
