@@ -20,8 +20,8 @@ html,body{height:100%;overflow:hidden;background:var(--black);color:var(--white)
 #wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:8px;padding:6px;user-select:none;}
 #hud{display:flex;align-items:center;gap:12px;width:100%;max-width:520px;justify-content:space-between;flex-wrap:wrap;}
 .hb{display:flex;flex-direction:column;align-items:center;gap:1px;}
-.hl{font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
-.hv{font-family:var(--ff);font-size:1.3rem;color:var(--accent);letter-spacing:.08em;}
+.hl{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
+.hv{font-family:var(--ff);font-size:2rem;color:var(--accent);letter-spacing:.08em;}
 #livesdiv{display:flex;gap:4px;align-items:center;}
 .lheart{width:11px;height:11px;background:var(--accent);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);}
 .lheart.gone{opacity:.15;}
@@ -41,17 +41,17 @@ canvas{display:block;image-rendering:pixelated;}
 .ov{position:fixed;inset:0;background:rgba(8,8,8,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:500;padding:20px;text-align:center;overflow-y:auto;}
 .ov.hide{display:none;}
 .otitle{font-family:var(--ff);font-size:clamp(2.2rem,7vw,3.8rem);letter-spacing:.15em;color:var(--accent);}
-.osub{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);max-width:340px;line-height:1.9;}
-.obtn{font-family:var(--fm);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--black);background:var(--accent);border:none;padding:13px 28px;cursor:pointer;transition:all .2s;}
+.osub{font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);max-width:340px;line-height:1.9;}
+.obtn{font-family:var(--fm);font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--black);background:var(--accent);border:none;padding:16px 32px;cursor:pointer;transition:all .2s;}
 .obtn:hover{background:var(--white);}
 .obtn.sec{background:transparent;color:var(--dim);border:1px solid var(--border);cursor:pointer;}
 .obtn.sec:hover{border-color:var(--accent);color:var(--accent);}
 .ibox{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;max-width:340px;}
 .irow{display:flex;align-items:center;gap:8px;text-align:left;}
-.ikey{font-family:var(--ff);font-size:.88rem;color:var(--accent);min-width:56px;}
-.itxt{font-size:.52rem;letter-spacing:.09em;color:var(--dim);line-height:1.5;}
+.ikey{font-family:var(--ff);font-size:1.2rem;color:var(--accent);min-width:56px;}
+.itxt{font-size:.75rem;letter-spacing:.09em;color:var(--dim);line-height:1.5;}
 .idiv{width:100%;max-width:320px;height:1px;background:var(--border);}
-.itip{font-size:.49rem;letter-spacing:.09em;color:rgba(200,169,110,.5);max-width:320px;line-height:1.85;}
+.itip{font-size:.7rem;letter-spacing:.09em;color:rgba(200,169,110,.5);max-width:320px;line-height:1.85;}
 .ucards{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:480px;}
 .ucard{flex:1;min-width:120px;max-width:148px;border:1px solid var(--border);padding:14px 10px;cursor:pointer;transition:all .2s;background:var(--surface);display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;}
 .ucard:hover{border-color:var(--accent);background:var(--adim);}
@@ -63,11 +63,23 @@ canvas{display:block;image-rendering:pixelated;}
 .sval{font-family:var(--ff);font-size:1.5rem;color:var(--accent);}
 .slbl{font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);}
 #flash{position:fixed;inset:0;pointer-events:none;z-index:8999;opacity:0;transition:opacity .07s;}
+#ingame-instructions{position:fixed;bottom:14px;left:14px;z-index:400;background:rgba(8,8,8,.88);border:1px solid var(--adim);padding:10px 14px;display:none;flex-direction:column;gap:5px;pointer-events:none;}
+#ingame-instructions .iig-row{display:flex;align-items:center;gap:8px;}
+#ingame-instructions .iig-key{font-family:var(--ff);font-size:1rem;color:var(--accent);min-width:52px;}
+#ingame-instructions .iig-txt{font-size:.62rem;letter-spacing:.08em;color:var(--dim);}
+#ingame-instructions .iig-title{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,169,110,.45);margin-bottom:2px;}
 </style>
 </head>
 <body>
 <a href="./index.html" id="back">← Back</a>
 <div id="flash"></div>
+
+<div id="ingame-instructions">
+  <div class="iig-title">Controls</div>
+  <div class="iig-row"><span class="iig-key">WASD</span><span class="iig-txt">Move</span></div>
+  <div class="iig-row"><span class="iig-key">SPACE</span><span class="iig-txt">Place bomb</span></div>
+  <div class="iig-row"><span class="iig-key">ESC</span><span class="iig-txt">Pause</span></div>
+</div>
 
 <div id="wrap">
   <div id="hud">
@@ -194,13 +206,13 @@ var SND={
 // ═══════════════════════════════════════════
 //  CONSTANTS
 // ═══════════════════════════════════════════
-var TILE=32,COLS=15,ROWS=13;
+var TILE=52,COLS=15,ROWS=13;
 var EMPTY=0,WALL=1,BRICK=2,ICE=3,LAVA=4;
 
 var UPGRADES=[
   {id:'bombs',ico:'💣',name:'Extra Bomb',   desc:'Place one more bomb at a time.',        fn:function(p){p.maxBombs++;}},
   {id:'range',ico:'🔥',name:'Blast Range',  desc:'Explosions reach one tile further.',    fn:function(p){p.range++;}},
-  {id:'speed',ico:'⚡',name:'Swift Feet',   desc:'Move noticeably faster.',               fn:function(p){p.spd=Math.min(p.spd+0.55,7);}},
+  {id:'speed',ico:'⚡',name:'Swift Feet',   desc:'Move noticeably faster.',               fn:function(p){p.spd=Math.min(p.spd+0.3,4);}},
   {id:'fire', ico:'🌋',name:'Hellfire',     desc:'Bombs leave burning ground for 2s.',    fn:function(p){p.fire=true;}},
   {id:'ice',  ico:'❄️',name:'Permafrost',   desc:'Explosions freeze enemies briefly.',    fn:function(p){p.ice=true;}},
   {id:'shock',ico:'⚡',name:'Chain Shock',  desc:'Damage chains to nearby enemies.',      fn:function(p){p.shock=true;}},
@@ -216,7 +228,7 @@ var UPGRADES=[
 var G=null,paused=false,rafId=null,lastT=0;
 
 function mkPlayer(){
-  return{tx:1.5,ty:1.5,spd:3.2,maxBombs:1,activeBombs:0,range:2,pierce:0,
+  return{tx:1.5,ty:1.5,spd:1.8,maxBombs:1,activeBombs:0,range:2,pierce:0,
     lives:3,inv:0,shield:false,fire:false,ice:false,shock:false,vampire:false,remote:false,
     score:0,kills:0};
 }
@@ -274,7 +286,7 @@ function spawnEnemy(boss){
   var baseHp=boss?12+G.level*3:type==='tank'?3:type==='rangy'?2:1;
   var hp=baseHp+(elite?1:0)+Math.floor(G.level/4);
   var e={tx:tx+0.5,ty:ty+0.5,type:type,hp:hp,maxHp:hp,elite:elite,boss:boss,
-    spd:boss?1.1+G.level*0.08:type==='fast'?2.2:type==='tank'?0.65:1.2,
+    spd:boss?0.6+G.level*0.04:type==='fast'?1.2:type==='tank'?0.35:0.65,
     dx:0,dy:0,moveT:0,moveInt:type==='fast'?14:type==='tank'?50:30,
     shootT:0,frozen:0,burning:0,shocked:0,dead:false,deathT:0};
   G.enemies.push(e);
@@ -314,7 +326,7 @@ function placeBomb(){
   var tx=Math.floor(p.tx),ty=Math.floor(p.ty);
   if(hasBomb(tx+0.5,ty+0.5)||isSolid(p.tx,p.ty))return;
   p.activeBombs++;
-  G.bombs.push({tx:tx,ty:ty,timer:160,range:p.range,pierce:p.pierce,
+  G.bombs.push({tx:tx,ty:ty,timer:260,range:p.range,pierce:p.pierce,
     fire:p.fire,ice:p.ice,shock:p.shock,owner:p});
   SND.bomb();
 }
@@ -470,6 +482,7 @@ function nextWave(){
 }
 
 function showDeath(){
+  document.getElementById('ingame-instructions').style.display='none';
   var p=G.player;
   document.getElementById('dstats').innerHTML=
     '<div class="sitem"><span class="sval">'+p.score+'</span><span class="slbl">Score</span></div>'+
@@ -498,7 +511,7 @@ var canvas=document.getElementById('gc');
 var ctx=canvas.getContext('2d');
 
 function resizeCanvas(){
-  var maxW=Math.min(window.innerWidth-12,560);
+  var maxW=Math.min(window.innerWidth-12,900);
   var scale=maxW/(COLS*TILE);
   canvas.width=COLS*TILE;canvas.height=ROWS*TILE;
   var W=Math.floor(COLS*TILE*scale),H=Math.floor(ROWS*TILE*scale);
@@ -678,7 +691,7 @@ function loop(ts){
   for(var pki=0;pki<G.pickups.length;pki++){
     var pk=G.pickups[pki];pk.timer--;
     if(Math.abs(p.tx-(pk.tx+.5))<.6&&Math.abs(p.ty-(pk.ty+.5))<.6){
-      if(pk.type==='bombs')p.maxBombs++;else if(pk.type==='range')p.range++;else p.spd=Math.min(p.spd+.4,7);
+      if(pk.type==='bombs')p.maxBombs++;else if(pk.type==='range')p.range++;else p.spd=Math.min(p.spd+0.2,4);
       SND.pickup();p.score+=5;updateHUD();
     }else if(pk.timer>0){newPicks.push(pk);}
   }
@@ -752,6 +765,7 @@ document.getElementById('pbtn').addEventListener('touchend',function(e){e.preven
 // ═══════════════════════════════════════════
 function startGame(){
   initAudio();hide('ostart');hide('odeath');
+  document.getElementById('ingame-instructions').style.display='flex';
   newGame();G.state='play';updateHUD();
 }
 function wireBtn(id,fn){
