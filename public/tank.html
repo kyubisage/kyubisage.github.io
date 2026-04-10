@@ -27,17 +27,21 @@ html,body{height:100%;overflow:hidden;background:var(--black);color:var(--white)
 #cw{position:relative;outline:1px solid var(--adim);}
 canvas{display:block;image-rendering:pixelated;}
 /* mobile controls */
-#mc{display:none;flex-direction:column;align-items:center;gap:8px;width:100%;max-width:480px;}
-#dpad{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,52px);gap:3px;}
-.db{width:52px;height:52px;background:var(--surface2);border:1px solid var(--border);color:var(--dim);font-size:1rem;display:flex;align-items:center;justify-content:center;border-radius:6px;-webkit-tap-highlight-color:transparent;user-select:none;transition:background .08s,border-color .08s;}
-.db.on{background:var(--adim);border-color:var(--accent);}
-.dc{background:transparent!important;border:none!important;pointer-events:none;}
-#firebtn{width:64px;height:64px;background:var(--surface2);border:2px solid var(--adim);color:var(--accent);font-family:var(--ff);font-size:.75rem;letter-spacing:.1em;border-radius:50%;-webkit-tap-highlight-color:transparent;user-select:none;transition:all .08s;}
-#firebtn.on{background:var(--accent);color:var(--black);border-color:var(--accent);}
-.mcrow{display:flex;gap:16px;align-items:center;}
-#pbtn{font-family:var(--fm);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border:1px solid var(--border);padding:7px 12px;background:var(--surface);cursor:pointer;transition:all .2s;}
+#mc{display:none;position:fixed;inset:0;pointer-events:none;z-index:100;}
+.vjoy{position:absolute;pointer-events:all;width:130px;height:130px;border-radius:50%;background:rgba(200,169,110,0.08);border:1.5px solid rgba(200,169,110,0.2);touch-action:none;-webkit-tap-highlight-color:transparent;}
+.vjoy-knob{position:absolute;width:52px;height:52px;border-radius:50%;background:rgba(200,169,110,0.35);border:1.5px solid rgba(200,169,110,0.6);top:50%;left:50%;transform:translate(-50%,-50%);transition:background .1s;pointer-events:none;}
+#joy-move{bottom:28px;left:28px;}
+#joy-aim{bottom:28px;right:28px;}
+#joy-aim .vjoy-knob{background:rgba(200,100,100,0.35);border-color:rgba(220,80,80,0.6);}
+#joy-aim.firing .vjoy-knob{background:rgba(220,80,80,0.7);border-color:#d94f3d;}
+#pbtn{position:fixed;top:52px;right:12px;z-index:200;font-family:var(--fm);font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border:1px solid var(--border);padding:6px 10px;background:var(--surface);cursor:pointer;transition:all .2s;pointer-events:all;}
 #pbtn:hover{border-color:var(--accent);color:var(--accent);}
-@media(max-width:600px),(pointer:coarse){#mc{display:flex;}}
+@media(max-width:700px),(pointer:coarse){
+  #mc{display:block;}
+  #hud{font-size:.8em;gap:6px;}
+  .hv{font-size:1rem!important;}
+  #healthbar{width:70px;}
+}
 /* overlays */
 .ov{position:fixed;inset:0;background:rgba(8,8,8,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:500;padding:20px;text-align:center;overflow-y:auto;}
 .ov.hide{display:none;}
@@ -86,15 +90,9 @@ canvas{display:block;image-rendering:pixelated;}
   </div>
   <div id="cw"><canvas id="gc"></canvas></div>
   <div id="mc">
-    <div class="mcrow">
-      <div id="dpad">
-        <div></div><button class="db" id="bu">▲</button><div></div>
-        <button class="db" id="bl">◀</button><div class="db dc"></div><button class="db" id="br">▶</button>
-        <div></div><button class="db" id="bd">▼</button><div></div>
-      </div>
-      <button id="firebtn">FIRE</button>
-    </div>
-    <button id="pbtn">⏸ Pause</button>
+    <div class="vjoy" id="joy-move"><div class="vjoy-knob" id="joy-move-knob"></div></div>
+    <div class="vjoy" id="joy-aim"><div class="vjoy-knob" id="joy-aim-knob"></div></div>
+    <button id="pbtn">⏸</button>
   </div>
 </div>
 
@@ -147,12 +145,14 @@ canvas{display:block;image-rendering:pixelated;}
 const canvas = document.getElementById('gc');
 const ctx = canvas.getContext('2d');
 const CELL = 32;
+const SPEED_SCALE = 0.28; // global speed multiplier — tune this one value to change game pace
 let W = 31, H = 25; // grid cells — Bomberman-scale arena
 let PX, PY; // pixel size
 
 function resize(){
-  const maxW = Math.min(window.innerWidth - 8, 1200);
-  const maxH = Math.min(window.innerHeight - 120, 900);
+  const isMobile = window.matchMedia('(pointer:coarse)').matches || window.innerWidth <= 700;
+  const maxW = Math.min(window.innerWidth - (isMobile ? 0 : 8), 1200);
+  const maxH = Math.min(window.innerHeight - (isMobile ? 0 : 120), 900);
   const scaleW = Math.floor(maxW / (W * CELL));
   const scaleH = Math.floor(maxH / (H * CELL));
   const scale = Math.max(1, Math.min(scaleW, scaleH));
@@ -307,8 +307,8 @@ function fireProjectile(from, angle, speed, damage, isPlayer, opts={}){
   projectiles.push({
     x: from.x + Math.cos(angle)*from.radius,
     y: from.y + Math.sin(angle)*from.radius,
-    vx: Math.cos(angle)*speed,
-    vy: Math.sin(angle)*speed,
+    vx: Math.cos(angle)*speed*SPEED_SCALE,
+    vy: Math.sin(angle)*speed*SPEED_SCALE,
     damage, isPlayer,
     radius: opts.radius||4,
     color: opts.color||(isPlayer ? C.accent : C.red),
@@ -327,7 +327,7 @@ function spawnParticles(x,y,color,count,speed,life){
   for(let i=0;i<count;i++){
     const a = Math.random()*Math.PI*2;
     const s = speed*(0.5+Math.random());
-    particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color,life,maxLife:life,r:2+Math.random()*2});
+    particles.push({x,y,vx:Math.cos(a)*s*SPEED_SCALE,vy:Math.sin(a)*s*SPEED_SCALE,color,life,maxLife:life,r:2+Math.random()*2});
   }
 }
 
@@ -420,15 +420,17 @@ function update(dt){
 
   // Player movement
   let pdx=0, pdy=0;
-  let spd = player.speed;
+  let spd = player.speed * SPEED_SCALE;
   // terrain slowdown
   const tt = terrainAt(player.x, player.y);
   if(tt==='mud') spd*=0.5;
 
-  if(keys['w']||keys['arrowup']||mobileDir.y<0) pdy-=spd;
-  if(keys['s']||keys['arrowdown']||mobileDir.y>0) pdy+=spd;
-  if(keys['a']||keys['arrowleft']||mobileDir.x<0) pdx-=spd;
-  if(keys['d']||keys['arrowright']||mobileDir.x>0) pdx+=spd;
+  if(keys['w']||keys['arrowup']) pdy-=spd;
+  if(keys['s']||keys['arrowdown']) pdy+=spd;
+  if(keys['a']||keys['arrowleft']) pdx-=spd;
+  if(keys['d']||keys['arrowright']) pdx+=spd;
+  // analog joystick — add scaled contribution
+  if(mobileDir.x||mobileDir.y){ pdx+=mobileDir.x*spd; pdy+=mobileDir.y*spd; }
 
   if(pdx||pdy){
     const len = Math.sqrt(pdx*pdx+pdy*pdy);
@@ -508,7 +510,7 @@ function update(dt){
         e.moveDir={x:((Math.random()-.5)),y:((Math.random()-.5))};
       }
     }
-    const spd2 = e.speed*speedMult;
+    const spd2 = e.speed*speedMult*SPEED_SCALE;
     const ed=Math.sqrt(e.moveDir.x*e.moveDir.x+e.moveDir.y*e.moveDir.y)||1;
     tryMove(e,e.moveDir.x/ed*spd2,0);
     tryMove(e,0,e.moveDir.y/ed*spd2);
@@ -851,35 +853,86 @@ canvas.addEventListener('click',e=>{
 canvas.addEventListener('mousedown',e=>{mouseX=e.clientX;mouseY=e.clientY;fireHeld=true;});
 canvas.addEventListener('mouseup',()=>fireHeld=false);
 
-// Mobile controls
+// Mobile controls — dual virtual joystick
 function setupMobile(){
-  const dirs={bu:{x:0,y:-1},bd:{x:0,y:1},bl:{x:-1,y:0},br:{x:1,y:0}};
-  Object.keys(dirs).forEach(id=>{
-    const btn=document.getElementById(id);
-    const dir=dirs[id];
-    const start=()=>{mobileDir.x+=dir.x;mobileDir.y+=dir.y;btn.classList.add('on');};
-    const end=()=>{mobileDir.x-=dir.x;mobileDir.y-=dir.y;btn.classList.remove('on');};
-    btn.addEventListener('touchstart',e=>{e.preventDefault();start();},{ passive:false});
-    btn.addEventListener('touchend',e=>{e.preventDefault();end();},{ passive:false});
-    btn.addEventListener('mousedown',start);
-    btn.addEventListener('mouseup',end);
-  });
-  const fb=document.getElementById('firebtn');
-  fb.addEventListener('touchstart',e=>{e.preventDefault();mobileFire=true;fb.classList.add('on');},{passive:false});
-  fb.addEventListener('touchend',e=>{e.preventDefault();mobileFire=false;fb.classList.remove('on');},{passive:false});
-  fb.addEventListener('mousedown',()=>{mobileFire=true;fb.classList.add('on');});
-  fb.addEventListener('mouseup',()=>{mobileFire=false;fb.classList.remove('on');});
+  function makeJoystick(joyEl, knobEl, onMove, onFire){
+    const R = 65; // outer radius
+    const KR = 26; // knob radius
+    let active = false;
+    let originX = 0, originY = 0;
+    let tid = null;
 
-  // touch aim - move finger on canvas
-  canvas.addEventListener('touchmove',e=>{
-    e.preventDefault();
-    const t=e.touches[0];
-    mouseX=t.clientX; mouseY=t.clientY;
-  },{passive:false});
-  canvas.addEventListener('touchstart',e=>{
-    const t=e.touches[0];
-    mouseX=t.clientX; mouseY=t.clientY;
-  },{passive:false});
+    function getCenter(){
+      const r = joyEl.getBoundingClientRect();
+      return {x: r.left + r.width/2, y: r.top + r.height/2};
+    }
+
+    function setKnob(dx, dy){
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      const clamped = Math.min(dist, R - KR);
+      const nx = dist > 0 ? dx/dist*clamped : 0;
+      const ny = dist > 0 ? dy/dist*clamped : 0;
+      knobEl.style.transform = `translate(calc(-50% + ${nx}px), calc(-50% + ${ny}px))`;
+      const norm = Math.min(dist / (R - KR), 1);
+      onMove(dist > 4 ? dx/dist*norm : 0, dist > 4 ? dy/dist*norm : 0);
+    }
+
+    function reset(){
+      active = false; tid = null;
+      knobEl.style.transform = 'translate(-50%,-50%)';
+      onMove(0, 0);
+      if(onFire) { onFire(false); joyEl.classList.remove('firing'); }
+    }
+
+    joyEl.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const t = e.changedTouches[0];
+      tid = t.identifier;
+      active = true;
+      const c = getCenter();
+      originX = c.x; originY = c.y;
+      setKnob(t.clientX - originX, t.clientY - originY);
+      if(onFire) { onFire(true); joyEl.classList.add('firing'); }
+    }, {passive:false});
+
+    joyEl.addEventListener('touchmove', e => {
+      e.preventDefault();
+      for(const t of e.changedTouches){
+        if(t.identifier === tid){
+          setKnob(t.clientX - originX, t.clientY - originY);
+          // update aim mouseX/mouseY for right stick
+          if(onFire){ mouseX = t.clientX; mouseY = t.clientY; }
+        }
+      }
+    }, {passive:false});
+
+    joyEl.addEventListener('touchend', e => {
+      e.preventDefault();
+      for(const t of e.changedTouches){ if(t.identifier===tid) reset(); }
+    }, {passive:false});
+    joyEl.addEventListener('touchcancel', e => { reset(); }, {passive:false});
+  }
+
+  makeJoystick(
+    document.getElementById('joy-move'),
+    document.getElementById('joy-move-knob'),
+    (nx, ny) => { mobileDir.x = nx; mobileDir.y = ny; },
+    null
+  );
+
+  makeJoystick(
+    document.getElementById('joy-aim'),
+    document.getElementById('joy-aim-knob'),
+    (nx, ny) => {
+      // aim turret in direction of stick
+      if(Math.abs(nx)>0.1 || Math.abs(ny)>0.1){
+        const c = canvas.getBoundingClientRect();
+        mouseX = c.left + c.width/2 + nx*200;
+        mouseY = c.top  + c.height/2 + ny*200;
+      }
+    },
+    (firing) => { mobileFire = firing; }
+  );
 }
 
 document.getElementById('pbtn').addEventListener('click',()=>{
