@@ -18,7 +18,7 @@ html,body{height:100%;overflow:hidden;background:var(--black);color:var(--white)
 #back{position:fixed;top:12px;left:12px;z-index:999;font-family:var(--fm);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);border:1px solid var(--adim);padding:7px 12px;background:rgba(8,8,8,.92);text-decoration:none;transition:all .2s;}
 #back:hover{background:var(--accent);color:var(--black);}
 #wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:8px;padding:6px;user-select:none;}
-#hud{display:flex;align-items:center;gap:12px;width:100%;max-width:640px;justify-content:space-between;flex-wrap:wrap;padding:0 4px;}
+#hud{display:flex;align-items:center;gap:12px;width:100%;max-width:1000px;justify-content:space-between;flex-wrap:wrap;padding:0 4px;}
 .hb{display:flex;flex-direction:column;align-items:center;gap:1px;}
 .hl{font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
 .hv{font-family:var(--ff);font-size:1.3rem;color:var(--accent);letter-spacing:.08em;}
@@ -147,12 +147,12 @@ canvas{display:block;image-rendering:pixelated;}
 const canvas = document.getElementById('gc');
 const ctx = canvas.getContext('2d');
 const CELL = 32;
-let W = 20, H = 16; // grid cells
+let W = 31, H = 25; // grid cells — Bomberman-scale arena
 let PX, PY; // pixel size
 
 function resize(){
-  const maxW = Math.min(window.innerWidth - 8, 800);
-  const maxH = Math.min(window.innerHeight - 120, 600);
+  const maxW = Math.min(window.innerWidth - 8, 1200);
+  const maxH = Math.min(window.innerHeight - 120, 900);
   const scaleW = Math.floor(maxW / (W * CELL));
   const scaleH = Math.floor(maxH / (H * CELL));
   const scale = Math.max(1, Math.min(scaleW, scaleH));
@@ -190,11 +190,11 @@ const player = {
   angle: 0,      // body angle
   turretAngle: 0,
   hp: 100, maxHp: 100,
-  speed: 2.5,
+  speed: 1.2,
   fireCooldown: 0,
   fireRate: 600,   // ms
   damage: 20,
-  projectileSpeed: 7,
+  projectileSpeed: 3.5,
   radius: 14,
   // modifiers
   modifiers: [],
@@ -281,9 +281,9 @@ function spawnEnemy(type){
     if(dist > 200 && terrainAt(ex,ey)!=='wall') break;
   }
   const configs = {
-    light:  {hp:40,  speed:2.0, damage:10, fireRate:1800, color:C.enemyLight, radius:12, xp:10, type:'light'},
-    heavy:  {hp:120, speed:1.0, damage:20, fireRate:2500, color:C.enemyHeavy, radius:16, xp:25, type:'heavy'},
-    sniper: {hp:30,  speed:1.5, damage:30, fireRate:2800, color:C.enemySniper,radius:11, xp:20, type:'sniper'},
+    light:  {hp:40,  speed:1.0, damage:10, fireRate:1800, color:C.enemyLight, radius:12, xp:10, type:'light'},
+    heavy:  {hp:120, speed:0.5, damage:20, fireRate:2500, color:C.enemyHeavy, radius:16, xp:25, type:'heavy'},
+    sniper: {hp:30,  speed:0.7, damage:30, fireRate:2800, color:C.enemySniper,radius:11, xp:20, type:'sniper'},
   };
   const cfg = configs[type];
   enemies.push({
@@ -786,8 +786,8 @@ function initGame(){
   player.x=(2.5)*CELL; player.y=(2.5)*CELL;
   player.angle=0; player.turretAngle=0;
   player.hp=100; player.maxHp=100;
-  player.speed=2.5; player.fireRate=600; player.damage=20;
-  player.projectileSpeed=7; player.fireCooldown=0;
+  player.speed=1.2; player.fireRate=600; player.damage=20;
+  player.projectileSpeed=3.5; player.fireCooldown=0;
   player.modifiers=[]; player.critChance=0;
   player.explosionRadius=0; player.piercing=false;
   player.burnChance=0; player.slowChance=0;
