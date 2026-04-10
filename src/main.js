@@ -1683,7 +1683,7 @@ function buildHTML() {
         <p class="section-desc">Small worlds. Big decisions.</p>
       </div>
       <div class="games-grid">
-        <a href="/public/bomberman.html" class="game-tile" target="_blank" rel="noopener">
+        <a href="./bomberman.html" class="game-tile" target="_blank" rel="noopener">
           <div class="game-tile-bg"></div>
           <div class="game-tile-icon">💣</div>
           <div class="game-tile-info">
