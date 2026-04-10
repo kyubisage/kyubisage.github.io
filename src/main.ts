@@ -1215,7 +1215,7 @@ function initCursor(): void {
   }
   animateRing();
 
-  document.querySelectorAll('a, button, .photo-item, .filter-btn, .poem-card').forEach(el => {
+  document.querySelectorAll('a, button, .photo-item, .filter-btn, .poem-card, .game-tile').forEach(el => {
     el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
     el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
   });
@@ -1657,10 +1657,11 @@ function buildHTML(): void {
 
     <!-- NAV -->
     <nav>
-      <div class="nav-logo">T<span>J</span></div>
+      <a href="#hero" class="nav-logo">T<span>J</span></a>
       <ul class="nav-links">
         <li><a href="#photography">Photography</a></li>
         <li><a href="#poetry">Poetry</a></li>
+        <li><a href="#games">Games</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="https://instagram.com/the_dark_string" target="_blank" rel="noopener">Instagram</a></li>
       </ul>
@@ -1672,6 +1673,7 @@ function buildHTML(): void {
       <ul>
         <li><a href="#photography" class="nav-mobile-link">Photography</a></li>
         <li><a href="#poetry" class="nav-mobile-link">Poetry</a></li>
+        <li><a href="#games" class="nav-mobile-link">Games</a></li>
         <li><a href="#about" class="nav-mobile-link">About</a></li>
         <li><a href="https://instagram.com/the_dark_string" target="_blank" rel="noopener" class="nav-mobile-link">Instagram</a></li>
       </ul>
@@ -1682,7 +1684,7 @@ function buildHTML(): void {
       <div class="hero-bg"></div>
       <div class="hero-grid-lines"></div>
       <div class="hero-center">
-        <div class="hero-eyebrow">Photography &amp; Poetry</div>
+        <div class="hero-eyebrow">Photography · Poetry · Games</div>
         <h1 class="hero-title">TJ</h1>
         <div class="hero-sub-text">
           <p>Capturing the spaces between light and shadow,<br>the moments between silence and sound.</p>
@@ -1701,6 +1703,7 @@ function buildHTML(): void {
       <div class="marquee-track">
         <span>Photography</span><span class="accent">—</span>
         <span>Poetry</span><span class="accent">—</span>
+        <span>Games</span><span class="accent">—</span>
         <span>Desire</span><span class="accent">—</span>
         <span>Longing</span><span class="accent">—</span>
         <span>Devotion</span><span class="accent">—</span>
@@ -1709,6 +1712,7 @@ function buildHTML(): void {
         <span>@the_dark_string</span><span class="accent">—</span>
         <span>Photography</span><span class="accent">—</span>
         <span>Poetry</span><span class="accent">—</span>
+        <span>Games</span><span class="accent">—</span>
         <span>Desire</span><span class="accent">—</span>
         <span>Longing</span><span class="accent">—</span>
         <span>Devotion</span><span class="accent">—</span>
@@ -1745,6 +1749,30 @@ function buildHTML(): void {
       <div id="poetry-section" class="poetry-grid"></div>
     </section>
 
+
+    <!-- GAMES -->
+    <section id="games">
+      <div class="section-header">
+        <div>
+          <span class="section-label">Interactive</span>
+          <h2 class="section-title">Games</h2>
+        </div>
+        <p class="section-desc">Small worlds. Big decisions.</p>
+      </div>
+      <div class="games-grid">
+        <a href="/public/bomberman.html" class="game-tile" target="_blank" rel="noopener">
+          <div class="game-tile-bg"></div>
+          <div class="game-tile-icon">💣</div>
+          <div class="game-tile-info">
+            <h3 class="game-tile-title">Rogue Bomber</h3>
+            <p class="game-tile-desc">A roguelike descent. Place bombs. Clear rooms. Collect upgrades. Die trying.</p>
+            <span class="game-tile-tag">Roguelike</span>
+            <span class="game-tile-tag">Action</span>
+          </div>
+          <div class="game-tile-play">Play ↗</div>
+        </a>
+      </div>
+    </section>
     <!-- ABOUT -->
     <section id="about">
       <div class="about-text">

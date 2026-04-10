@@ -1007,3 +1007,92 @@ footer {
   .nav-hamburger { display: flex; }
   .nav-mobile-menu { display: flex; }
 }
+
+/* ─── GAMES SECTION ──────────────────────────────────────────────── */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2px;
+  margin-top: 48px;
+}
+.game-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 36px 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  cursor: none;
+  transition: border-color 0.3s, background 0.3s;
+  text-decoration: none;
+  color: var(--white);
+}
+.game-tile:hover {
+  border-color: var(--accent);
+  background: var(--surface-raised);
+}
+.game-tile-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 20%, var(--accent-glow), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.game-tile:hover .game-tile-bg { opacity: 1; }
+.game-tile-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+.game-tile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.game-tile-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+}
+.game-tile-desc {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--white-dim);
+  line-height: 1.6;
+}
+.game-tile-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent-dim);
+  padding: 4px 8px;
+  margin-right: 6px;
+  margin-top: 4px;
+}
+.game-tile-play {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.game-tile:hover .game-tile-play {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── NAV LOGO AS LINK ───────────────────────────────────────────── */
+a.nav-logo {
+  text-decoration: none;
+  cursor: none;
+}
