@@ -159,8 +159,8 @@ canvas{display:block;image-rendering:pixelated;}
   <div class="idiv"></div>
   <div class="itip">
     💣 Bombs detonate after ~4s and chain to nearby bombs.<br>
-    🧱 Break bricks to find bonus pickups (💣 range ⚡ speed).<br>
-    ✨ Clear all enemies to advance and choose an upgrade.<br>
+    🧱 Break bricks to find temp upgrades (💣 range ⚡) or bonus points.<br>
+    ✨ Clear all enemies to advance and choose a <b>permanent</b> upgrade.<br>
     👾 Bosses appear every 5 levels — adapt your build.<br>
     📱 Mobile: use the D-pad and BOMB button below the game.
   </div>
@@ -495,9 +495,9 @@ var TILE=52,COLS=15,ROWS=13;
 var EMPTY=0,WALL=1,BRICK=2,ICE=3,LAVA=4;
 
 var UPGRADES=[
-  {id:'bombs',ico:'💣',name:'Extra Bomb',   desc:'Place one more bomb at a time.',        fn:function(p){p.maxBombs++;}},
-  {id:'range',ico:'🔥',name:'Blast Range',  desc:'Explosions reach one tile further.',    fn:function(p){p.range++;}},
-  {id:'speed',ico:'⚡',name:'Swift Feet',   desc:'Move noticeably faster.',               fn:function(p){p.spd=Math.min(p.spd+0.3,4);}},
+  {id:'bombs',ico:'💣',name:'Extra Bomb',   desc:'Place one more bomb at a time.',        fn:function(p){p.maxBombs++;p._permBombs++;}},
+  {id:'range',ico:'🔥',name:'Blast Range',  desc:'Explosions reach one tile further.',    fn:function(p){p.range++;p._permRange++;}},
+  {id:'speed',ico:'⚡',name:'Swift Feet',   desc:'Move noticeably faster.',               fn:function(p){p.spd=Math.min(p.spd+0.3,4);p._permSpd=Math.min(p._permSpd+0.3,4);}},
   {id:'fire', ico:'🌋',name:'Hellfire',     desc:'Bombs leave burning ground for 2s.',    fn:function(p){p.fire=true;}},
   {id:'ice',  ico:'❄️',name:'Permafrost',   desc:'Explosions freeze enemies briefly.',    fn:function(p){p.ice=true;}},
   {id:'shock',ico:'⚡',name:'Chain Shock',  desc:'Damage chains to nearby enemies.',      fn:function(p){p.shock=true;}},
@@ -515,7 +515,9 @@ var G=null,paused=false,rafId=null,lastT=0;
 function mkPlayer(){
   return{tx:1.5,ty:1.5,spd:1.8,maxBombs:1,activeBombs:0,range:2,pierce:0,
     lives:3,inv:0,shield:false,fire:false,ice:false,shock:false,vampire:false,remote:false,
-    score:0,kills:0};
+    score:0,kills:0,
+    // permanent upgrade baseline (accumulated from end-level upgrades)
+    _permBombs:1,_permRange:2,_permSpd:1.8};
 }
 function newGame(){
   G={state:'idle',level:1,wave:1,bossLevel:false,
@@ -535,6 +537,10 @@ function newGame(){
 function genLevel(){
   var lv=G.level,boss=G.bossLevel;
   G.grid=[];G.bombs=[];G.flames=[];G.enemies=[];G.pickups=[];
+  // reset temporary level upgrades to permanent baseline
+  var p=G.player;
+  p.maxBombs=p._permBombs;p.range=p._permRange;p.spd=p._permSpd;
+  p.activeBombs=0;
   var y,x;
   for(y=0;y<ROWS;y++){
     G.grid[y]=[];
@@ -597,9 +603,22 @@ function tryMove(e,dx,dy,spd){
   var R=0.38;
   var nx=e.tx+dx*spd,ny=e.ty+dy*spd;
   var okX=!isSolid(nx-R,e.ty)&&!isSolid(nx+R,e.ty)&&!isSolid(nx-R,e.ty-R)&&!isSolid(nx+R,e.ty-R)&&!isSolid(nx-R,e.ty+R)&&!isSolid(nx+R,e.ty+R);
-  if(okX)e.tx=nx;else nx=e.tx;
+  if(okX)e.tx=nx;else{
+    // corner correction: if blocked horizontally, nudge vertically toward tile center
+    if(e===G.player&&dy===0){
+      var cellY=Math.floor(e.ty);var centerY=cellY+0.5;var diff=centerY-e.ty;
+      if(Math.abs(diff)>0.02&&Math.abs(diff)<R+0.18){e.ty+=diff*0.22;}
+    }
+    nx=e.tx;
+  }
   var okY=!isSolid(e.tx-R,ny)&&!isSolid(e.tx+R,ny)&&!isSolid(e.tx-R,ny-R)&&!isSolid(e.tx+R,ny-R)&&!isSolid(e.tx-R,ny+R)&&!isSolid(e.tx+R,ny+R);
-  if(okY)e.ty=ny;
+  if(okY)e.ty=ny;else{
+    // corner correction: if blocked vertically, nudge horizontally toward tile center
+    if(e===G.player&&dx===0){
+      var cellX=Math.floor(e.tx);var centerX=cellX+0.5;var diffX=centerX-e.tx;
+      if(Math.abs(diffX)>0.02&&Math.abs(diffX)<R+0.18){e.tx+=diffX*0.22;}
+    }
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -643,8 +662,17 @@ function explodeBomb(b){
 }
 function addFlame(tx,ty,b){G.flames.push({tx:tx,ty:ty,timer:28+(b.fire?60:0),fire:b.fire,ice:b.ice,shock:b.shock});}
 function spawnPickup(tx,ty){
-  var types=['bombs','range','speed'];
-  G.pickups.push({tx:tx,ty:ty,type:types[Math.floor(Math.random()*3)],timer:380});
+  // 50% chance temp upgrade, 50% bonus points
+  var r=Math.random();
+  var type,pts=0;
+  if(r<0.5){
+    var upTypes=['bombs','range','speed'];
+    type=upTypes[Math.floor(Math.random()*3)];
+  }else{
+    type='points';
+    pts=50+Math.floor(Math.random()*3)*50; // 50,100,150
+  }
+  G.pickups.push({tx:tx,ty:ty,type:type,pts:pts,timer:420,temp:type!=='points'});
 }
 function spawnParts(tx,ty,color,n){
   for(var i=0;i<n;i++){
@@ -817,9 +845,17 @@ function render(){
   for(var pi=0;pi<G.pickups.length;pi++){
     var pk=G.pickups[pi];
     var pcx=pk.tx*TILE+TILE/2,pcy=pk.ty*TILE+TILE/2+Math.sin(G.tick*.08)*2;
-    ctx.fillStyle='rgba(200,169,110,.1)';ctx.beginPath();ctx.arc(pcx,pcy,TILE*.36,0,Math.PI*2);ctx.fill();
-    ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(pk.type==='bombs'?'💣':pk.type==='range'?'🔥':'⚡',pcx,pcy);
+    if(pk.type==='points'){
+      ctx.fillStyle='rgba(200,200,80,.15)';ctx.beginPath();ctx.arc(pcx,pcy,TILE*.32,0,Math.PI*2);ctx.fill();
+      ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle='rgba(220,210,80,.9)';ctx.fillText('+'+pk.pts,pcx,pcy);
+    }else{
+      ctx.fillStyle='rgba(200,169,110,.1)';ctx.beginPath();ctx.arc(pcx,pcy,TILE*.36,0,Math.PI*2);ctx.fill();
+      ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(pk.type==='bombs'?'💣':pk.type==='range'?'🔥':'⚡',pcx,pcy);
+      // show temp indicator
+      ctx.font='7px monospace';ctx.fillStyle='rgba(200,169,110,.55)';ctx.fillText('tmp',pcx,pcy+TILE*.28);
+    }
   }
   for(var bi=0;bi<G.bombs.length;bi++){
     var b=G.bombs[bi];var bpx=b.tx*TILE+TILE/2,bpy=b.ty*TILE+TILE/2;
@@ -950,8 +986,13 @@ function loop(ts){
   for(var pki=0;pki<G.pickups.length;pki++){
     var pk=G.pickups[pki];pk.timer--;
     if(Math.abs(p.tx-(pk.tx+.5))<.6&&Math.abs(p.ty-(pk.ty+.5))<.6){
-      if(pk.type==='bombs')p.maxBombs++;else if(pk.type==='range')p.range++;else p.spd=Math.min(p.spd+0.2,4);
-      SND.pickup();p.score+=5;updateHUD();
+      if(pk.type==='bombs'){p.maxBombs++;}
+      else if(pk.type==='range'){p.range++;}
+      else if(pk.type==='speed'){p.spd=Math.min(p.spd+0.2,4);}
+      else if(pk.type==='points'){p.score+=pk.pts;}
+      SND.pickup();
+      if(pk.type!=='points')p.score+=5;
+      updateHUD();
     }else if(pk.timer>0){newPicks.push(pk);}
   }
   G.pickups=newPicks;
