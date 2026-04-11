@@ -14,6 +14,35 @@
   <div id="app"></div>
   <script type="module" src="src/main.ts"></script>
   <script>
+    // Inject mob game tile after app renders
+    (function(){
+      function injectMobTile(){
+        const grid = document.querySelector('.games-grid');
+        if(!grid){ setTimeout(injectMobTile,100); return; }
+        if(document.getElementById('mob-tile')) return;
+        const a = document.createElement('a');
+        a.id = 'mob-tile';
+        a.href = './mob.html';
+        a.className = 'game-tile';
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.innerHTML = `<div class="game-tile-bg"></div>
+<div class="game-tile-icon">&#128101;</div>
+<div class="game-tile-info">
+  <h3 class="game-tile-title">Mob Rush</h3>
+  <p class="game-tile-desc">Steer your horde through +1 +10 x2 gates. Multiply your forces. Overwhelm enemy lines. 50 levels of escalating chaos.</p>
+  <span class="game-tile-tag">Runner</span>
+  <span class="game-tile-tag">Strategy</span>
+  <span class="game-tile-tag">Gates</span>
+</div>
+<div class="game-tile-play">Play &#8599;</div>`;
+        grid.appendChild(a);
+      }
+      if(document.readyState==='loading'){
+        document.addEventListener('DOMContentLoaded',()=>setTimeout(injectMobTile,150));
+      } else { setTimeout(injectMobTile,150); }
+    })();
+
     // Inject tank game tile after app renders
     (function(){
       function injectTankTile(){
