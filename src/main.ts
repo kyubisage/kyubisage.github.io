@@ -1771,6 +1771,17 @@ function buildHTML(): void {
           </div>
           <div class="game-tile-play">Play ↗</div>
         </a>
+        <a href="./obelisk.html" class="game-tile" target="_blank" rel="noopener">
+          <div class="game-tile-bg"></div>
+          <div class="game-tile-icon">🗼</div>
+          <div class="game-tile-info">
+            <h3 class="game-tile-title">Obelisk</h3>
+            <p class="game-tile-desc">A single 3D tower stands against 100 waves of enemies. It fires on its own — you pick the upgrades that keep it standing.</p>
+            <span class="game-tile-tag">Tower Defense</span>
+            <span class="game-tile-tag">3D</span>
+          </div>
+          <div class="game-tile-play">Play ↗</div>
+        </a>
       </div>
     </section>
     <!-- ABOUT -->
